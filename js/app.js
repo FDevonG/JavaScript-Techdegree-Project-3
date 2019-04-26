@@ -194,7 +194,7 @@ VALIDATION
 *****************/
 
 //adds the event listener for the submit button
-$('button').on('click', () => {
+$('button').on('click', event => {
 	'use strict';
 	
 	if (!nameValid($('#name').val())) {
@@ -241,6 +241,15 @@ $('button').on('click', () => {
 			clearError('#cvv');
 		}
 		
+	}
+	
+	if (!nameValid($('#name').val()) || !emailValid($('#mail').val()) || !registered()) {
+		event.preventDefault();
+	}
+	if ($('#payment').val('credit card')) {
+		if (!creditNumberValid($('#cc-num').val()) || !zipValid($('#zip').val()) || !cvvValid($('#cvv').val())) {
+			event.preventDefault();
+		}
 	}
 	
 });
