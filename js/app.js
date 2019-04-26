@@ -194,9 +194,8 @@ VALIDATION
 *****************/
 
 //adds the event listener for the submit button
-$('button').on('click', event => {
+$('button').on('click', () => {
 	'use strict';
-	event.preventDefault();
 	
 	if (!nameValid($('#name').val())) {
 		formError('#name', 'Please enter a name');
