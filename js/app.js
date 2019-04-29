@@ -159,15 +159,17 @@ initailPaymentSetUp();
 function initailPaymentSetUp () {
 	'use strict';
 	const paymentOptions = $('#payment').children();
-	$(paymentOptions[0]).prop('disabled', true);
-	$('#payment').val('credit card');
-	$('p').hide();
+	if ($(paymentOptions[0]).prop('disabled', false)) {
+		$(paymentOptions[0]).prop('disabled', true);
+		$('#payment').val('credit card');
+		$('p').hide();
+	}
 }
 
 //Sets up the event listener on the payment type selector
 $('#payment').on('change', event => {
 	'use strict';
-	const p = $('p');
+	const p = $('p');//find the two paraghraphs
 	
 	if (event.target.value === 'credit card') {
 		$('.credit-card').show();
@@ -196,26 +198,29 @@ VALIDATION
 //adds the event listener for the submit button
 $('button').on('click', event => {
 	'use strict';
-	
+		
 	if (!nameValid($('#name').val())) {
 		formError('#name', 'Please enter a name');
+		event.preventDefault();
 	} else {
 		clearError('#name');
 	}
 	
 	if (!emailValid($('#mail').val())) {
 		formError('#mail', 'Please enter a valid email');
+		event.preventDefault();
 	} else {
 		clearError('#mail');
 	}
 	
 	if (!registered()) {
 		formError('.activities', 'Please select a workshop');
+		event.preventDefault();
 	} else {
 		clearError('.activities');
 	}
 	
-	if ($('#payment').val('credit card')) {
+	if ($('#payment').value === 'credit card') {
 		
 		if (!creditNumberValid($('#cc-num').val())) {
 			let numberMessage;
@@ -225,31 +230,25 @@ $('button').on('click', event => {
 				numberMessage = 'Please enter a number between 13 and 16 digits';
 			}
 			formError('#cc-num', numberMessage);
+			event.preventDefault();
 		} else {
 			clearError('#cc-num');
 		}
 		
 		if (!zipValid($('#zip').val())) {
 			formError('#zip', 'Please enter a valid zip code');
+			event.preventDefault();
 		} else {
 			clearError('#zip');
 		} 
 		
 		if (!cvvValid($('#cvv').val())) {
 			formError('#cvv', 'Please enter a valid cvv number');
+			event.preventDefault();
 		} else {
 			clearError('#cvv');
 		}
 		
-	}
-	
-	if (!nameValid($('#name').val()) || !emailValid($('#mail').val()) || !registered()) {
-		event.preventDefault();
-	}
-	if ($('#payment').val('credit card')) {
-		if (!creditNumberValid($('#cc-num').val()) || !zipValid($('#zip').val()) || !cvvValid($('#cvv').val())) {
-			event.preventDefault();
-		}
 	}
 	
 });
@@ -273,7 +272,6 @@ function formError (id, message) {
 	if (!$('.' + id.substring(1) + 'Error').length) {
 		const div = document.createElement('div');
 		$(div).addClass(id.substring(1) + 'Error');
-		console.log(id.substring(1));
 		const html = `<p style="color:red" style="font-size:0.8em">${message}</p>`;
 		$(div).html(html);
 		if (id !== '.activities') {
@@ -338,5 +336,6 @@ function cvvValid (number) {
 	const cvvRegex = new RegExp(/^\d{3}$/);
 	return cvvRegex.test(number);
 }
+
 
 
